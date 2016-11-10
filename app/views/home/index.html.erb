@@ -1,0 +1,96 @@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<link rel="stylesheet" href="/stylesheets/index.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript">
+  $( function() {
+  $( "#datepicker" ).datepicker({ dateFormat: "yy-mm-dd" });
+  $( "#datepicker2" ).datepicker({ dateFormat: "yy-mm-dd" });
+  } );
+  var datepicker;
+  function onload() { 
+    datepicker = document.getElementById('datepicker');
+    datepicker = document.getElementById('datepicker2');
+  }
+  function plan(){
+    var shopPlan = '<%= @shop.plan_name %>';
+      if (shopPlan != "unlimited"){
+        alert("if you want to enjoy using this App, upgrade your Shop to Advance or Unlimited Shopify Plan")
+      }
+  }
+
+  function query(startDate, endDay) {
+      var shopifyQL = 'SHOW sum(pageview_count) FROM visits SINCE ' + startDate + ' UNTIL ' + endDay;
+      renderData = function(response) {
+        console.log(response.referring_site)
+        var all_orders = '<%= @sum_orders %>';
+        var conversion_rate = all_orders / response.result.data[0] * 100
+        $(".result").append(conversion_rate.toFixed(2) + "% conversion_rate");
+
+      };
+      ShopifyApp.Analytics.fetch({
+        query: shopifyQL,
+        success: renderData,
+        error: renderData
+      });
+
+  };
+
+  $(document).ready(function(){
+
+    plan();
+
+    $('#get_dates').click(function(){
+      var startDate = $('#datepicker').val();
+      var endDay = $('#datepicker2').val();
+      query(startDate, endDay);
+      
+      return false;
+    });
+  }); 
+
+</script>
+
+<body onload="onload();">
+
+   <div class="column twelve"> 
+    <header>
+      <div class="column twelve">
+        <h1>Select date for conversion rate</h1>
+      </div> 
+    </header>
+
+    <section>
+      <div class="column six">
+        <p>Start from</p>
+        <input type="text" id="datepicker"/>
+      </div>
+      <div class="column six">
+        <p>To</p>
+        <input type="text" id="datepicker2"/>
+      </div>
+    </section>
+
+    <section>
+      <div class="column twelve">
+        <p><input type="button" value="click" id="get_dates"/></p>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h1><div class="column twelve result"></div></h1>
+      </div>
+    </section>
+
+    <footer>
+    </footer>
+  </div>
+
+</body>
+
+
+
+
+

@@ -1,0 +1,19 @@
+h1{
+	display: block;
+	text-align: center;
+	width: 100%;
+}
+
+input{
+	display: block;
+	text-align: center;
+	width: 100%
+}
+
+p{
+    font-style: italic;
+}
+
+h1{
+    font-family: "Times New Roman", Georgia, Serif;
+}
